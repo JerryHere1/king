@@ -366,15 +366,9 @@ public class BotAIManager {
 
     private void swingArm(BotInstance bot) {
         Entity entity = getBotEntity(bot);
-        if (entity instanceof Player p) {
-            // For NPC entities, play animation via world
-            entity.getWorld().playEffect(entity.getLocation(), Effect.CLICK1, 0);
-        }
-        // Citizens NPC arm swing
-        if (entity instanceof LivingEntity le) {
-            entity.getWorld().broadcastBlockBreakAnimation(
-                    entity, entity.getLocation().getBlock(), (byte) 0);
-        }
+        // Play a click sound at the entity's location to simulate arm swing
+        entity.getWorld().playEffect(entity.getLocation(), Effect.CLICK1, 0);
+        entity.getWorld().playEffect(entity.getLocation(), Effect.CLICK2, 0);
     }
 
     private Block getFrontBlock(BotInstance bot) {
@@ -386,7 +380,7 @@ public class BotAIManager {
 
     private void navigateTo(BotInstance bot, Location target) {
         NPC npc = bot.getNpc();
-        if (npc.isSpawned() && npc.hasTrait(net.citizensnpcs.api.trait.trait.MountTrait.class)) return;
+        if (!npc.isSpawned()) return;
         try {
             npc.getNavigator().setTarget(target);
         } catch (Exception ignored) {
